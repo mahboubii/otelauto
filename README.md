@@ -1,4 +1,4 @@
-# OTELAuto
+# OTelAuto
 
 [![ci](https://github.com/mahboubii/otelauto/actions/workflows/workflow.yaml/badge.svg?branch=main)](https://github.com/mahboubii/otelauto/actions/workflows/workflow.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mahboubii/otelauto)](https://goreportcard.com/report/github.com/mahboubii/otelauto)
