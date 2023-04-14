@@ -6,6 +6,8 @@
 
 An OpenTelemetry (OTel) metric instrumentation helper inspired by prometheus [promauto](github.com/prometheus/client_golang/prometheus/promauto).
 
+By default it's using the global meter provider.
+
 ## Install
 
 ```bash
