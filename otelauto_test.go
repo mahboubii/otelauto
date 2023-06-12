@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/noop"
 )
 
 func TestDefault(t *testing.T) {
@@ -17,7 +17,7 @@ func TestDefault(t *testing.T) {
 
 func TestWith(t *testing.T) {
 	assert.NotPanics(t, func() {
-		counter := With(metric.NewNoopMeter()).Int64Counter("my.counter")
+		counter := With(noop.NewMeterProvider().Meter("")).Int64Counter("my.counter")
 		counter.Add(context.Background(), 1)
 	})
 }

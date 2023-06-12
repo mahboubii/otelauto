@@ -22,43 +22,42 @@ package otelauto
 //
 
 import (
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/metric/global"
-	"go.opentelemetry.io/otel/metric/instrument"
 )
 
 // Int64Counter returns a new instrument identified by name and configured
 // with options. The instrument is used to synchronously record increasing
 // int64 measurements during a computational operation.
-func Int64Counter(name string, opts ...instrument.Int64Option) instrument.Int64Counter {
+func Int64Counter(name string, opts ...metric.Int64CounterOption) metric.Int64Counter {
 	return withDefault().Int64Counter(name, opts...)
 }
 
 // Int64UpDownCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // int64 measurements during a computational operation.
-func Int64UpDownCounter(name string, opts ...instrument.Int64Option) instrument.Int64UpDownCounter {
+func Int64UpDownCounter(name string, opts ...metric.Int64UpDownCounterOption) metric.Int64UpDownCounter {
 	return withDefault().Int64UpDownCounter(name, opts...)
 }
 
 // Int64Histogram returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // the distribution of int64 measurements during a computational operation.
-func Int64Histogram(name string, opts ...instrument.Int64Option) instrument.Int64Histogram {
+func Int64Histogram(name string, opts ...metric.Int64HistogramOption) metric.Int64Histogram {
 	return withDefault().Int64Histogram(name, opts...)
 }
 
 // Int64ObservableCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to asynchronously record
 // increasing int64 measurements once per a measurement collection cycle.
-func Int64ObservableCounter(name string, opts ...instrument.Int64ObserverOption) instrument.Int64ObservableCounter {
+func Int64ObservableCounter(name string, opts ...metric.Int64ObservableCounterOption) metric.Int64ObservableCounter {
 	return withDefault().Int64ObservableCounter(name, opts...)
 }
 
 // Int64ObservableUpDownCounter returns a new instrument identified by name
 // and configured with options. The instrument is used to asynchronously
 // record int64 measurements once per a measurement collection cycle.
-func Int64ObservableUpDownCounter(name string, opts ...instrument.Int64ObserverOption) instrument.Int64ObservableUpDownCounter {
+func Int64ObservableUpDownCounter(name string, opts ...metric.Int64ObservableUpDownCounterOption) metric.Int64ObservableUpDownCounter {
 	return withDefault().Int64ObservableUpDownCounter(name, opts...)
 }
 
@@ -66,21 +65,21 @@ func Int64ObservableUpDownCounter(name string, opts ...instrument.Int64ObserverO
 // configured with options. The instrument is used to asynchronously record
 // instantaneous int64 measurements once per a measurement collection
 // cycle.
-func Int64ObservableGauge(name string, opts ...instrument.Int64ObserverOption) instrument.Int64ObservableGauge {
+func Int64ObservableGauge(name string, opts ...metric.Int64ObservableGaugeOption) metric.Int64ObservableGauge {
 	return withDefault().Int64ObservableGauge(name, opts...)
 }
 
 // Float64Counter returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // increasing float64 measurements during a computational operation.
-func Float64Counter(name string, opts ...instrument.Float64Option) instrument.Float64Counter {
+func Float64Counter(name string, opts ...metric.Float64CounterOption) metric.Float64Counter {
 	return withDefault().Float64Counter(name, opts...)
 }
 
 // Float64UpDownCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // float64 measurements during a computational operation.
-func Float64UpDownCounter(name string, opts ...instrument.Float64Option) instrument.Float64UpDownCounter {
+func Float64UpDownCounter(name string, opts ...metric.Float64UpDownCounterOption) metric.Float64UpDownCounter {
 	return withDefault().Float64UpDownCounter(name, opts...)
 }
 
@@ -88,14 +87,14 @@ func Float64UpDownCounter(name string, opts ...instrument.Float64Option) instrum
 // configured with options. The instrument is used to synchronously record
 // the distribution of float64 measurements during a computational
 // operation.
-func Float64Histogram(name string, opts ...instrument.Float64Option) instrument.Float64Histogram {
+func Float64Histogram(name string, opts ...metric.Float64HistogramOption) metric.Float64Histogram {
 	return withDefault().Float64Histogram(name, opts...)
 }
 
 // Float64ObservableCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to asynchronously record
 // increasing float64 measurements once per a measurement collection cycle.
-func Float64ObservableCounter(name string, opts ...instrument.Float64ObserverOption) instrument.Float64ObservableCounter {
+func Float64ObservableCounter(name string, opts ...metric.Float64ObservableCounterOption) metric.Float64ObservableCounter {
 	return withDefault().Float64ObservableCounter(name, opts...)
 }
 
@@ -103,7 +102,7 @@ func Float64ObservableCounter(name string, opts ...instrument.Float64ObserverOpt
 // name and configured with options. The instrument is used to
 // asynchronously record float64 measurements once per a measurement
 // collection cycle.
-func Float64ObservableUpDownCounter(name string, opts ...instrument.Float64ObserverOption) instrument.Float64ObservableUpDownCounter {
+func Float64ObservableUpDownCounter(name string, opts ...metric.Float64ObservableUpDownCounterOption) metric.Float64ObservableUpDownCounter {
 	return withDefault().Float64ObservableUpDownCounter(name, opts...)
 }
 
@@ -111,7 +110,7 @@ func Float64ObservableUpDownCounter(name string, opts ...instrument.Float64Obser
 // configured with options. The instrument is used to asynchronously record
 // instantaneous float64 measurements once per a measurement collection
 // cycle.
-func Float64ObservableGauge(name string, opts ...instrument.Float64ObserverOption) instrument.Float64ObservableGauge {
+func Float64ObservableGauge(name string, opts ...metric.Float64ObservableGaugeOption) metric.Float64ObservableGauge {
 	return withDefault().Float64ObservableGauge(name, opts...)
 }
 
@@ -126,7 +125,7 @@ func Float64ObservableGauge(name string, opts ...instrument.Float64ObserverOptio
 //
 // If no instruments are passed, f should not be registered nor called
 // during collection.
-func RegisterCallback(c metric.Callback, instruments ...instrument.Asynchronous) metric.Registration {
+func RegisterCallback(c metric.Callback, instruments ...metric.Observable) metric.Registration {
 	return withDefault().RegisterCallback(c, instruments...)
 }
 
@@ -137,7 +136,7 @@ type Factory struct {
 // Int64Counter returns a new instrument identified by name and configured
 // with options. The instrument is used to synchronously record increasing
 // int64 measurements during a computational operation.
-func (f Factory) Int64Counter(name string, opts ...instrument.Int64Option) instrument.Int64Counter {
+func (f Factory) Int64Counter(name string, opts ...metric.Int64CounterOption) metric.Int64Counter {
 	i, err := f.mp.Int64Counter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -149,7 +148,7 @@ func (f Factory) Int64Counter(name string, opts ...instrument.Int64Option) instr
 // Int64UpDownCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // int64 measurements during a computational operation.
-func (f Factory) Int64UpDownCounter(name string, opts ...instrument.Int64Option) instrument.Int64UpDownCounter {
+func (f Factory) Int64UpDownCounter(name string, opts ...metric.Int64UpDownCounterOption) metric.Int64UpDownCounter {
 	i, err := f.mp.Int64UpDownCounter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -161,7 +160,7 @@ func (f Factory) Int64UpDownCounter(name string, opts ...instrument.Int64Option)
 // Int64Histogram returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // the distribution of int64 measurements during a computational operation.
-func (f Factory) Int64Histogram(name string, opts ...instrument.Int64Option) instrument.Int64Histogram {
+func (f Factory) Int64Histogram(name string, opts ...metric.Int64HistogramOption) metric.Int64Histogram {
 	i, err := f.mp.Int64Histogram(name, opts...)
 	if err != nil {
 		panic(err)
@@ -173,7 +172,7 @@ func (f Factory) Int64Histogram(name string, opts ...instrument.Int64Option) ins
 // Int64ObservableCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to asynchronously record
 // increasing int64 measurements once per a measurement collection cycle.
-func (f Factory) Int64ObservableCounter(name string, opts ...instrument.Int64ObserverOption) instrument.Int64ObservableCounter {
+func (f Factory) Int64ObservableCounter(name string, opts ...metric.Int64ObservableCounterOption) metric.Int64ObservableCounter {
 	i, err := f.mp.Int64ObservableCounter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -185,7 +184,7 @@ func (f Factory) Int64ObservableCounter(name string, opts ...instrument.Int64Obs
 // Int64ObservableUpDownCounter returns a new instrument identified by name
 // and configured with options. The instrument is used to asynchronously
 // record int64 measurements once per a measurement collection cycle.
-func (f Factory) Int64ObservableUpDownCounter(name string, opts ...instrument.Int64ObserverOption) instrument.Int64ObservableUpDownCounter {
+func (f Factory) Int64ObservableUpDownCounter(name string, opts ...metric.Int64ObservableUpDownCounterOption) metric.Int64ObservableUpDownCounter {
 	i, err := f.mp.Int64ObservableUpDownCounter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -198,7 +197,7 @@ func (f Factory) Int64ObservableUpDownCounter(name string, opts ...instrument.In
 // configured with options. The instrument is used to asynchronously record
 // instantaneous int64 measurements once per a measurement collection
 // cycle.
-func (f Factory) Int64ObservableGauge(name string, opts ...instrument.Int64ObserverOption) instrument.Int64ObservableGauge {
+func (f Factory) Int64ObservableGauge(name string, opts ...metric.Int64ObservableGaugeOption) metric.Int64ObservableGauge {
 	i, err := f.mp.Int64ObservableGauge(name, opts...)
 	if err != nil {
 		panic(err)
@@ -210,7 +209,7 @@ func (f Factory) Int64ObservableGauge(name string, opts ...instrument.Int64Obser
 // Float64Counter returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // increasing float64 measurements during a computational operation.
-func (f Factory) Float64Counter(name string, opts ...instrument.Float64Option) instrument.Float64Counter {
+func (f Factory) Float64Counter(name string, opts ...metric.Float64CounterOption) metric.Float64Counter {
 	i, err := f.mp.Float64Counter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -222,7 +221,7 @@ func (f Factory) Float64Counter(name string, opts ...instrument.Float64Option) i
 // Float64UpDownCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to synchronously record
 // float64 measurements during a computational operation.
-func (f Factory) Float64UpDownCounter(name string, opts ...instrument.Float64Option) instrument.Float64UpDownCounter {
+func (f Factory) Float64UpDownCounter(name string, opts ...metric.Float64UpDownCounterOption) metric.Float64UpDownCounter {
 	i, err := f.mp.Float64UpDownCounter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -235,7 +234,7 @@ func (f Factory) Float64UpDownCounter(name string, opts ...instrument.Float64Opt
 // configured with options. The instrument is used to synchronously record
 // the distribution of float64 measurements during a computational
 // operation.
-func (f Factory) Float64Histogram(name string, opts ...instrument.Float64Option) instrument.Float64Histogram {
+func (f Factory) Float64Histogram(name string, opts ...metric.Float64HistogramOption) metric.Float64Histogram {
 	i, err := f.mp.Float64Histogram(name, opts...)
 	if err != nil {
 		panic(err)
@@ -247,7 +246,7 @@ func (f Factory) Float64Histogram(name string, opts ...instrument.Float64Option)
 // Float64ObservableCounter returns a new instrument identified by name and
 // configured with options. The instrument is used to asynchronously record
 // increasing float64 measurements once per a measurement collection cycle.
-func (f Factory) Float64ObservableCounter(name string, opts ...instrument.Float64ObserverOption) instrument.Float64ObservableCounter {
+func (f Factory) Float64ObservableCounter(name string, opts ...metric.Float64ObservableCounterOption) metric.Float64ObservableCounter {
 	i, err := f.mp.Float64ObservableCounter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -260,7 +259,7 @@ func (f Factory) Float64ObservableCounter(name string, opts ...instrument.Float6
 // name and configured with options. The instrument is used to
 // asynchronously record float64 measurements once per a measurement
 // collection cycle.
-func (f Factory) Float64ObservableUpDownCounter(name string, opts ...instrument.Float64ObserverOption) instrument.Float64ObservableUpDownCounter {
+func (f Factory) Float64ObservableUpDownCounter(name string, opts ...metric.Float64ObservableUpDownCounterOption) metric.Float64ObservableUpDownCounter {
 	i, err := f.mp.Float64ObservableUpDownCounter(name, opts...)
 	if err != nil {
 		panic(err)
@@ -273,7 +272,7 @@ func (f Factory) Float64ObservableUpDownCounter(name string, opts ...instrument.
 // configured with options. The instrument is used to asynchronously record
 // instantaneous float64 measurements once per a measurement collection
 // cycle.
-func (f Factory) Float64ObservableGauge(name string, opts ...instrument.Float64ObserverOption) instrument.Float64ObservableGauge {
+func (f Factory) Float64ObservableGauge(name string, opts ...metric.Float64ObservableGaugeOption) metric.Float64ObservableGauge {
 	i, err := f.mp.Float64ObservableGauge(name, opts...)
 	if err != nil {
 		panic(err)
@@ -293,7 +292,7 @@ func (f Factory) Float64ObservableGauge(name string, opts ...instrument.Float64O
 //
 // If no instruments are passed, f should not be registered nor called
 // during collection.
-func (f Factory) RegisterCallback(c metric.Callback, instruments ...instrument.Asynchronous) metric.Registration {
+func (f Factory) RegisterCallback(c metric.Callback, instruments ...metric.Observable) metric.Registration {
 	r, err := f.mp.RegisterCallback(c, instruments...)
 	if err != nil {
 		panic(err)
@@ -309,5 +308,5 @@ func With(mp metric.Meter) Factory {
 }
 
 func withDefault() Factory {
-	return With(global.MeterProvider().Meter("github.com/mahboubii/otelauto"))
+	return With(otel.GetMeterProvider().Meter("github.com/mahboubii/otelauto"))
 }
